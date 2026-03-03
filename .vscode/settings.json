@@ -1,0 +1,11 @@
+{
+  "python.defaultInterpreterPath": "C:\\Users\\nsmith3\\AppData\\Local\\anaconda3\\envs\\traffic_control_fst\\python.exe",
+  "python.terminal.activateEnvironment": true,
+  "python.languageServer": "Pylance",
+  "python-envs.defaultEnvManager": "ms-python.python:conda",
+  "python-envs.defaultPackageManager": "ms-python.python:conda",
+  "python-envs.pythonProjects": []
+}
+
+
+

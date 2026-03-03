@@ -1,0 +1,70 @@
+import pynini as fst
+import numpy as np
+import subprocess
+from splearn.spectral import Spectral
+from TL_pckgs.UTILS.SCL_funcs import supervisor
+from TL_pckgs.UTILS.TL_funcs import TL_desired_lang, TL_input_syms_table, TL_output_syms_table 
+from TL_pckgs.WA_package.weighted_automaton import WeightedAutomaton
+from TL_pckgs.WA_package.examples import example_fibonacci 
+from TL_pckgs.AUTOMATA.auto_funcs import WFA2arrays, NTT2FST
+
+# test_fst = TL_desired_lang() 
+# table = test_fst.input_symbols()
+# test_sup = supervisor(test_fst)
+# itable, ikeys = TL_input_syms_table()
+# otable, okeys = TL_output_syms_table()
+
+# WFA = example_fibonacci()
+
+# initial = WFA.initial
+# initial[0,1] = 0
+# final = WFA.final
+# final[1,0] = 1
+# trans = WFA.transitions
+# MAT = trans['a']
+# alphabet = [0]
+# new_trans = {0: MAT}
+# pair_list = [("rg","gr")]
+# WFA_mod = WeightedAutomaton(n=WFA.n, alphabet=alphabet, initial=initial, transitions=new_trans, final=final)
+
+# test = NTT2FST(NTT=WFA_mod, input_table=otable, output_table=otable, pair_list=pair_list)
+
+alphabet = [0, 1, 2]
+
+pair_list = [("a","b"), ("b", "c"), ("c", "d") ]
+
+initial = np.array([[1, 0, 0]])
+
+T_a = np.zeros((3,3))
+T_b = np.zeros((3,3))
+T_c = np.zeros((3,3))
+
+T_a[0,1] = 1.0
+T_b[1,2] = 1.0
+T_c[2,0] = 1.0 
+
+final = np.ones((3,1))
+
+trans_dict = {}
+trans_dict[0] = T_a
+trans_dict[1] = T_b
+trans_dict[2] = T_c
+
+WFA = WeightedAutomaton(n=3, alphabet=alphabet, initial=initial, 
+                        transitions=trans_dict, final=final)
+
+table = fst.SymbolTable()
+
+table.add_symbol("a",key=0)
+table.add_symbol("b",key=1)
+table.add_symbol("c",key=2)
+table.add_symbol("d",key=3)
+
+fst = NTT2FST(NTT=WFA, input_table=table, 
+              output_table=table, pair_list=pair_list )
+
+# 1) Write DOT
+fst.draw("fst.dot")
+
+# 2) Render to PDF (requires Graphviz 'dot' on PATH)
+subprocess.run(["dot", "-Tpdf", "fst.dot", "-o", "ex_fst.pdf"], check=True)
